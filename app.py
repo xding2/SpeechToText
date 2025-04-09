@@ -20,4 +20,7 @@ def save_transcript():
     return jsonify({"success": success})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    # 使用环境变量中的端口，如果没有则默认为5000
+    port = int(os.environ.get("PORT", 5000))
+    # 监听所有IP
+    app.run(host='0.0.0.0', port=port)

@@ -14,16 +14,23 @@ def save_transcript(transcript, language, timestamp):
         bool: True if saved successfully, False otherwise
     """
     try:
-        # Create directory if it doesn't exist
-        if not os.path.exists('transcripts'):
-            os.makedirs('transcripts')
+        # 尝试在当前工作目录创建transcripts文件夹
+        transcripts_dir = os.path.join(os.getcwd(), 'transcripts')
+        if not os.path.exists(transcripts_dir):
+            os.makedirs(transcripts_dir)
+        
+        # 如果上面失败，尝试在/tmp目录创建（Render通常允许写入这个目录）
+        if not os.path.exists(transcripts_dir):
+            transcripts_dir = "/tmp/transcripts"
+            if not os.path.exists(transcripts_dir):
+                os.makedirs(transcripts_dir)
         
         # Format current time if timestamp not provided
         if not timestamp:
             timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         
         # Create filename with timestamp and language
-        filename = f"transcripts/transcript_{timestamp}_{language}.txt"
+        filename = os.path.join(transcripts_dir, f"transcript_{timestamp}_{language}.txt")
         
         # Write transcript to file
         with open(filename, "w", encoding="utf-8") as f:
